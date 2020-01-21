@@ -2247,7 +2247,6 @@ static int nand_write_oob (struct mtd_info *mtd, loff_t to, size_t len, size_t *
 out:
 	/* Deselect and wake up anyone waiting on the device */
 	nand_release_device(mtd);
-
 	return ret;
 }
 

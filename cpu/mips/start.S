@@ -526,17 +526,17 @@ in_ram:
 	/* Now we want to update GOT.
 	 */
 	lw	t3, -4(t0)	/* t3 <-- num_got_entries	*/
-	addi	t4, gp, 8	/* Skipping first two entries.	*/
+	addiu	t4, gp, 8	/* Skipping first two entries.	*/
 	li	t2, 2
 1:
 	lw	t1, 0(t4)
 	beqz	t1, 2f
-	add	t1, t6
+	addu	t1, t6
 	sw	t1, 0(t4)
 2:
-	addi	t2, 1
+	addiu	t2, 1
 	blt	t2, t3, 1b
-	addi	t4, 4		/* delay slot			*/
+	addiu	t4, 4		/* delay slot			*/
 
 	/* Clear BSS.
 	 */
