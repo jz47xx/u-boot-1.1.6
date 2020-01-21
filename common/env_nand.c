@@ -227,6 +227,18 @@ void env_relocate_spec (void)
 	nand_read(&nand_info[0], CFG_ENV_OFFSET_REDUND, &total,
 		  (u_char*) tmp_env2);
 
+#ifdef CFG_JZ_LINUX_RECOVERY
+	/* if recovery then overwrite 'tmp_env1' and 'tmp_env2' */
+	if(is_jz_linux_recovery){
+		memset(tmp_env1,0,total);
+		memset(tmp_env2,0,total);
+		nand_read(&nand_info[0], CFG_ENV_REVY_OFFSET, &total,
+		  (u_char*) tmp_env1);
+		nand_read(&nand_info[0], CFG_ENV_REVY_OFFSET_REDUND, &total,
+		  (u_char*) tmp_env2);
+	}
+#endif
+
 	crc1_ok = (crc32(0, tmp_env1->data, ENV_SIZE) == tmp_env1->crc);
 	crc2_ok = (crc32(0, tmp_env2->data, ENV_SIZE) == tmp_env2->crc);
 
@@ -276,6 +288,14 @@ void env_relocate_spec (void)
 
 	total = CFG_ENV_SIZE;
 	ret = nand_read(&nand_info[0], CFG_ENV_OFFSET, &total, (u_char*)env_ptr);
+
+#ifdef CFG_JZ_LINUX_RECOVERY
+	if(is_jz_linux_recovery){
+		memset(env_ptr,0,total);
+		nand_read(&nand_info[0], CFG_ENV_REVY_OFFSET, &total,(u_char*) env_ptr);
+	}
+#endif
+
   	if (ret || total != CFG_ENV_SIZE)
 		return use_default();
 

@@ -384,6 +384,10 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	env_name_spec += gd->reloc_off;
 #endif
 
+#ifdef CONFIG_POST
+	post_reloc ();
+#endif
+
 	/* configure available FLASH banks */
 	size = flash_init();
 	display_flash_config (size);

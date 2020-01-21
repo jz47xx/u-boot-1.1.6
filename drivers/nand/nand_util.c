@@ -359,8 +359,14 @@ int nand_write_opts(nand_info_t *meminfo, const nand_write_options_t *opts)
 
 	/* get image length */
 	imglen = opts->length;
+
+#if defined(CONFIG_JZ4760B)
+	pagelen = meminfo->oobblock - meminfo->freesize
+		+ ((opts->writeoob != 0) ? meminfo->oobsize : 0);
+#else
 	pagelen = meminfo->oobblock
 		+ ((opts->writeoob != 0) ? meminfo->oobsize : 0);
+#endif
 
 	/* check, if file is pagealigned */
 	if ((!opts->pad) && ((imglen % pagelen) != 0)) {
@@ -623,13 +629,21 @@ int nand_read_opts(nand_info_t *meminfo, const nand_read_options_t *opts)
 			return -1;
 		}
 
+#if defined(CONFIG_JZ4760B)
+		if (imglen < meminfo->data_per_page) {
+			imglen = meminfo->data_per_page;
+		}
+		memcpy(buffer, data_buf, meminfo->data_per_page);
+		buffer += meminfo->data_per_page;
+		imglen -= meminfo->data_per_page;
+#else
 		if (imglen < readlen) {
 			readlen = imglen;
 		}
-
 		memcpy(buffer, data_buf, readlen);
 		buffer += readlen;
 		imglen -= readlen;
+#endif
 
 		if (opts->readoob) {
 			result = meminfo->read_oob(meminfo,
