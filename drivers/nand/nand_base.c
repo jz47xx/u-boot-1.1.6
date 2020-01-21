@@ -3184,6 +3184,18 @@ static void nand_release_device (struct mtd_info *mtd)
 }
 #endif
 
+void buffer_dump(uint8_t *buffer, int length, const char *comment, char *file, char *function, int line)
+{
+	int i;
+	uint8_t *temp = buffer;
+	printk("BufferDump: %s %d %s %s %d\n", comment, length, file, function, line);
+	for(i = 0; i < length; i++) {
+		if (i % 16 == 0) printk("\n");
+		printk("%02x ", *temp++);
+	}
+	printk("\nOk.\n");
+}
+
 /**
  * nand_read_byte - [DEFAULT] read one byte from the chip
  * @mtd:	MTD device structure
@@ -5030,7 +5042,6 @@ static int nand_write_oob (struct mtd_info *mtd, loff_t to, size_t len, size_t *
 out:
 	/* Deselect and wake up anyone waiting on the device */
 	nand_release_device(mtd);
-
 	return ret;
 }
 

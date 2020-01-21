@@ -429,6 +429,15 @@ static int search_bbt (struct mtd_info *mtd, uint8_t *buf, struct nand_bbt_descr
 				}
 				break;
 			}
+			/* Read last page */
+			nand_read_raw (mtd, buf, (actblock << this->bbt_erase_shift) + (mtd->erasesize - mtd->oobblock), mtd->oobblock, mtd->oobsize);
+			if (!check_pattern(buf, scanlen, mtd->oobblock, td)) {
+				td->pages[i] = actblock << (this->bbt_erase_shift - this->page_shift);
+				if (td->options & NAND_BBT_VERSION) {
+					td->version[i] = buf[mtd->oobblock + td->veroffs];
+				}
+				break;
+			}
 		}
 		startblock += this->chipsize >> this->bbt_erase_shift;
 	}
