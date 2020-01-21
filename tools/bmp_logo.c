@@ -95,6 +95,19 @@ uint32_t le_int(uint32_t x)
     return val;
 }
 
+uint32_t le_int(uint32_t x)
+{
+    uint32_t val;
+    uint8_t *p = (uint8_t *)(&x);
+
+    val =  (*p++ & 0xff) << 0;
+    val =  (*p++ & 0xff) << 8;
+    val =  (*p++ & 0xff) << 16;
+    val |= (*p & 0xff) << 24;
+
+    return val;
+}
+
 void skip_bytes (FILE *fp, int n)
 {
 	while (n-- > 0)
