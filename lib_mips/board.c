@@ -29,6 +29,10 @@
 #include <net.h>
 #include <environment.h>
 
+#ifdef CONFIG_JZSOC
+#include <asm/jzsoc.h>
+#endif	/* CONFIG_JZSOC */
+
 DECLARE_GLOBAL_DATA_PTR;
 
 #if ( ((CFG_ENV_ADDR+CFG_ENV_SIZE) < CFG_MONITOR_BASE) || \

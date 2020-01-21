@@ -432,7 +432,6 @@ reset:
 	j	t9
 	nop
 
-
 /*
  * void relocate_code (addr_sp, gd, addr_moni)
  *

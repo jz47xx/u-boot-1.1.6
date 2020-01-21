@@ -2668,7 +2668,7 @@ int nand_scan (struct mtd_info *mtd, int maxchips)
 {
 	int i, j, nand_maf_id, nand_dev_id, busw;
 	struct nand_chip *this = mtd->priv;
-
+	int master_id;
 	/* Get buswidth to select the correct functions*/
 	busw = this->options & NAND_BUSWIDTH_16;
 

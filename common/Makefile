@@ -53,6 +53,10 @@ COBJS	= main.o ACEX1K.o altera.o bedbug.o circbuf.o \
 	  usb.o usb_kbd.o usb_storage.o \
 	  virtex2.o xilinx.o crc16.o xyzModem.o cmd_mac.o
 
+ifeq ($(CONFIG_CPU_TYPE),4760)
+COBJS += cmd_rtc.o cmd_addr.o
+endif
+
 SRCS	:= $(AOBJS:.o=.S) $(COBJS:.o=.c)
 OBJS	:= $(addprefix $(obj),$(AOBJS) $(COBJS))
 
