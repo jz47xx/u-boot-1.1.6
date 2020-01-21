@@ -2262,6 +2262,25 @@ lepus_msc_config:	unconfig
 	@echo "CONFIG_USE_DDR2 = y" >> $(obj)include/config.mk
 	@echo "CONFIG_USE_SDRAM = n" >> $(obj)include/config.mk
 
+lepus_msc_ddr2_config:	unconfig
+	@echo "#define CONFIG_MSC_U_BOOT" > $(obj)include/config.h
+	@echo "#define CONFIG_JZ_RECOVERY">> $(obj)include/config.h
+
+	@echo "#define CONFIG_SDRAM_DDR2" >> $(obj)include/config.h
+	@echo "#define CONFIG_SDRAM_MDDR" >> $(obj)include/config.h
+
+	@echo "Compile MSC boot image for lepus"
+	@./mkconfig -a lepus mips mips lepus
+	@echo "TEXT_BASE = 0x80100200" > $(obj)board/lepus/config.tmp
+	@echo "CONFIG_MSC_U_BOOT = y" >> $(obj)include/config.mk
+	@echo "CONFIG_CPU_TYPE = 4760" >> $(obj)include/config.mk
+	@echo "CONFIG_USE_MDDR = n" >> $(obj)include/config.mk
+	@echo "CONFIG_USE_DDR1 = n" >> $(obj)include/config.mk
+	@echo "CONFIG_USE_DDR2 = y" >> $(obj)include/config.mk
+	@echo "CONFIG_USE_SDRAM = n" >> $(obj)include/config.mk
+	@echo "CONFIG_JZ_RECOVERY = y" >> $(obj)include/config.mk
+	@echo "CONFIG_MBR_UBOOT = y" >> $(obj)include/config.mk
+
 lepus_msc_recovery_config:	unconfig
 	@echo "#define CONFIG_MSC_U_BOOT" > $(obj)include/config.h
 	@echo "#define CONFIG_JZ_RECOVERY">> $(obj)include/config.h
