@@ -1,3 +1,8 @@
+/*modified by zhzhao<zhzhao@ingenic.cn>,20091103
+ add function: support 24-bit bmp */
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,6 +39,19 @@ uint16_t le_short(uint16_t x)
 
     val =  (*p++ & 0xff) << 0;
     val |= (*p & 0xff) << 8;
+
+    return val;
+}
+
+uint32_t le_int(uint32_t x)
+{
+    uint32_t val;
+    uint8_t *p = (uint8_t *)(&x);
+
+    val =  (*p++ & 0xff) << 0;
+    val =  (*p++ & 0xff) << 8;
+    val =  (*p++ & 0xff) << 16;
+    val |= (*p & 0xff) << 24;
 
     return val;
 }
@@ -104,15 +122,25 @@ int main (int argc, char *argv[])
 	 * read width and height of the image, and the number of colors used;
 	 * ignore the rest
 	 */
-	skip_bytes (fp, 8);
-	fread (&data_offset, sizeof (uint16_t), 1, fp);
+	skip_bytes (fp, 8); //skip 8 byte
+	fread (&data_offset, sizeof (uint16_t), 1, fp); //read size is 2
 	skip_bytes (fp, 6);
-	fread (&b->width,   sizeof (uint16_t), 1, fp);
+	fread (&b->width,   sizeof (uint16_t), 1, fp); //read size is 2
 	skip_bytes (fp, 2);
 	fread (&b->height,  sizeof (uint16_t), 1, fp);
-	skip_bytes (fp, 22);
-	fread (&n_colors, sizeof (uint16_t), 1, fp);
-	skip_bytes (fp, 6);
+
+
+	skip_bytes(fp,4);
+	fread (&nbit,  sizeof (uint16_t), 1, fp);
+
+	if(nbit == 24)
+		skip_bytes (fp, 24);
+	else{
+		skip_bytes (fp, 16);
+		fread (&n_colors, sizeof (uint16_t), 1, fp);
+		skip_bytes (fp, 6);
+	}
+
 
 	/*
 	 * Repair endianess.

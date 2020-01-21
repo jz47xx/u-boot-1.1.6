@@ -106,6 +106,52 @@ static void lcd_getcolreg (ushort regno,
 static int lcd_getfgcolor (void);
 #endif	/* NOT_USED_SO_FAR */
 
+#if defined(CONFIG_JZ4750D)
+#include <asm/jz4750d.h>
+#endif
+
+
+/************************************************************************/
+/*                 show progress of boot 20091103 by zhzhao
+/*----------------------------------------------------------------------*/
+int progress_x=124,progress_y=205; // the start point to paint progress
+
+void  show_boot_progress (int status)
+{
+	uint *fb32;
+
+	uchar *fb8;
+	ushort i,j;
+	int color32=0xff0000;
+	int color8=0xff;
+
+	if (BMP_LOGO_BITS == 24){
+		fb32   = (uint *)(lcd_base + progress_y * lcd_line_length + progress_x);
+		printf("length lcd is %d \n",lcd_line_length);
+		if (status > 0 )
+			//	for(j=progress_y;j<1+progress_y;++j){
+				for(i=0;i<12;i++)
+					fb32[i] = color32;
+		//	fb32 += panel_info.vl_col;
+		//	}
+
+
+	}else{
+		fb8   = (uchar *)(lcd_base + progress_y * lcd_line_length + progress_x);
+
+		if (status > 0 )
+			for(j=progress_y;j<5+progress_y;++j){
+				for(i=0;i<8;i++)
+					fb8[i] = color8;
+				fb32 += panel_info.vl_col;
+			}
+	}
+	progress_x += 12;
+	printf("##### progress = %d \n",status);
+}
+
+
+
 /************************************************************************/
 
 /*----------------------------------------------------------------------*/
@@ -370,7 +416,7 @@ int drv_lcd_init (void)
 	int rc;
 
 	lcd_base = (void *)(gd->fb_base);
-
+	printf("-=-=-=-= 0x%08x -=-=-=- \n",lcd_base);
 	lcd_line_length = (panel_info.vl_col * NBITS (panel_info.vl_bpix)) / 8;
 
 	lcd_init (lcd_base);		/* LCD initialization */

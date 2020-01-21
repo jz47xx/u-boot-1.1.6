@@ -185,8 +185,11 @@ void do_bootm_linux (cmd_tbl_t * cmdtp, int flag, int argc, char *argv[],
 	printf ("## Transferring control to Linux (at address %08lx) ...\n",
 		(ulong) theKernel);
 #endif
-
+#if 0
 	linux_params_init (UNCACHED_SDRAM (gd->bd->bi_boot_params), commandline);
+#else
+	linux_params_init ((gd->bd->bi_boot_params), commandline);
+#endif
 
 #ifdef CONFIG_MEMSIZE_IN_BYTES
 	sprintf (env_buf, "%lu", gd->ram_size);

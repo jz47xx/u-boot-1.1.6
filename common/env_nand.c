@@ -74,6 +74,7 @@ env_t *env_ptr = (env_t *)(&environment[0]);
 env_t *env_ptr = 0;
 #endif /* ENV_IS_EMBEDDED */
 
+#undef ENV_IS_EMBEDDED
 
 /* local functions */
 #if !defined(ENV_IS_EMBEDDED)
@@ -142,7 +143,6 @@ int env_init(void)
 	gd->env_addr  = (ulong)&default_environment[0];
 	gd->env_valid = 1;
 #endif /* ENV_IS_EMBEDDED */
-
 	return (0);
 }
 
@@ -192,7 +192,9 @@ int saveenv(void)
 	int ret = 0;
 
 	puts ("Erasing Nand...");
-	if (nand_erase(&nand_info[0], CFG_ENV_OFFSET, CFG_ENV_SIZE))
+//	if (nand_erase(&nand_info[0], CFG_ENV_OFFSET, CFG_ENV_SIZE))
+       /*the third parameter should be aligned with block size,changed by Cynthia*/
+	if (nand_erase(&nand_info[0], CFG_ENV_OFFSET, CFG_NAND_BLOCK_SIZE))
 		return 1;
 
 	puts ("Writing to Nand... ");

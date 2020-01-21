@@ -109,7 +109,23 @@ static int init_func_ram (void)
 #endif
 	puts ("DRAM:  ");
 
+#if defined(CONFIG_JZSOC)
+#ifndef EMC_LOW_SDRAM_SPACE_SIZE
+#define EMC_LOW_SDRAM_SPACE_SIZE 0x08000000 /* 128M */
+#endif
+	unsigned int ram_size;
+	ram_size = initdram (board_type);
+
+	if ( ram_size > EMC_LOW_SDRAM_SPACE_SIZE ) {
+		print_size (ram_size, "\t");
+		printf("Ram size > EMC_LOW_SDRAM_SPACE_SIZE, set ram size = EMC_LOW_SDRAM_SPACE_SIZE: ");
+		ram_size = EMC_LOW_SDRAM_SPACE_SIZE;
+	}
+
+	if ((gd->ram_size = ram_size) > 0) {
+#else
 	if ((gd->ram_size = initdram (board_type)) > 0) {
+#endif	/* CONFIG_JZSOC */
 		print_size (gd->ram_size, "\n");
 		return (0);
 	}

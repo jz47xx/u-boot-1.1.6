@@ -2772,6 +2772,7 @@ int nand_scan (struct mtd_info *mtd, int maxchips)
 			this->select_chip(mtd, -1);
 			return 1;
 		}
+#endif
 
 		/* Calculate the address shift from the page size */
 		this->page_shift = ffs(mtd->oobblock) - 1;
@@ -2814,6 +2815,9 @@ int nand_scan (struct mtd_info *mtd, int maxchips)
 	if (!nand_flash_ids[i].name) {
 		printk (KERN_WARNING "No NAND device found!!!\n");
 		this->select_chip(mtd, -1);
+		printk ( "NAND device: Manufacturer ID:"
+			 " 0x%02x, Chip ID: 0x%02x not known!\n", nand_maf_id, nand_dev_id);
+
 		return 1;
 	}
 
